@@ -5,40 +5,73 @@ using UnityEngine;
 
 public class BuildPath : MonoBehaviour
 {
+    #region ScriptReferences
     private ModulePrefabs modulePrefabs;
     private MacroGridStorage macroGridStorage;
     private SetMacroGrid setMacroGrid;
+    private BranchDungeon branchDungeon;
+    #endregion
+
+    #region PrivateBools_ContinueBuild_RotateHall
     private bool continueBuild = true;
     private bool rotateHall = false;
+    #endregion
 
-    int roomOrHallModule = 1;
+    private int roomOrHallModule = 1;
+
+    public bool buildVertical = false;
+
 
     public IEnumerator Build()
     {
+        #region GetScripts
         modulePrefabs = GetComponent<ModulePrefabs>();
         macroGridStorage = GetComponent<MacroGridStorage>();
         setMacroGrid = GetComponent<SetMacroGrid>();
+        branchDungeon = GetComponent<BranchDungeon>();
+        #endregion
 
         float macroGridSize = setMacroGrid.lengthWidth;
 
         //Declare the random start access points externally so that I can acess and count from them going forward.
         int accessKeyX = MyOwnRandomizer.TwoNumberIntReturn(1.0f, macroGridSize - 1);
-        yield return new WaitForSeconds(5.0f);
         int accessKeyY = MyOwnRandomizer.TwoNumberIntReturn(1.0f, macroGridSize - 1);
+        int endAccessKeyX;
+        int endAccessKeyY;
 
         Debug.Log(macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position);
 
-        yield return new WaitForSeconds(5.0f);
-        //Do the same thing for the end access points, but retrieve the Vector3 as well for later path completion verification.
-        int endAccessKeyX = MyOwnRandomizer.TwoNumberIntReturn(accessKeyX + 1, macroGridSize);
-        yield return new WaitForSeconds(5.0f);
-        int endAccessKeyY = MyOwnRandomizer.TwoNumberIntReturn(accessKeyX + 1, macroGridSize);
+        yield return new WaitForSeconds(1.0f);
+
+        buildVertical = MyOwnRandomizer.TwoNumberRandomizer(0.0f, 100.0f);
+
+        if(buildVertical)
+        {
+            endAccessKeyX = accessKeyX;
+            if(accessKeyY < (macroGridSize / 2))
+                endAccessKeyY = MyOwnRandomizer.TwoNumberIntReturn(accessKeyY + 1, macroGridSize);
+            else
+                endAccessKeyY = MyOwnRandomizer.TwoNumberIntReturn(1.0f, accessKeyY);
+        }
+        else
+        {
+            if(accessKeyX < (macroGridSize / 2))
+                endAccessKeyX = MyOwnRandomizer.TwoNumberIntReturn(accessKeyX + 1, macroGridSize);
+            else
+                endAccessKeyX = MyOwnRandomizer.TwoNumberIntReturn(1.0f, accessKeyX);
+            endAccessKeyY = accessKeyY;
+        }
+
         Vector3 endPos = macroGridStorage.macroGridPoints[endAccessKeyX, endAccessKeyY].transform.position;
 
         Debug.Log(endPos);
 
-        Instantiate(modulePrefabs.roomPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
+        GameObject startRoom = Instantiate(modulePrefabs.roomPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
+        //Get and store access keys
+        startRoom.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
+        startRoom.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
 
+        //Begin build operations
         do
         {
             #region MoveChecking
@@ -85,7 +118,10 @@ public class BuildPath : MonoBehaviour
 
             if(roomOrHallModule % 2 == 0)
             {
+                //Create a module, save its access key data for potential branching later
                 GameObject tempModule = Instantiate(modulePrefabs.roomPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
+                tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
+                tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
                 if(rotateHall)
                     rotateHall = false;
 
@@ -93,6 +129,8 @@ public class BuildPath : MonoBehaviour
             }else
             {
                 GameObject tempModule = Instantiate(modulePrefabs.HallPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
+                tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
+                tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
                 if(rotateHall)
                 {
                     Vector3 rotationStation = new Vector3(0.0f, 0.0f, 90.0f);
@@ -118,6 +156,8 @@ public class BuildPath : MonoBehaviour
             }
             
         }while(continueBuild);
-        Debug.Log(roomOrHallModule.ToString());
+        
+        Debug.Log("Calling Branch");
+        branchDungeon.Branch();
     }
 }

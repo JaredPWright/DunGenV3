@@ -6,23 +6,32 @@ using DunGenDataTypes;
 public class LocalGridSpawner_Room : MonoBehaviour
 {
     private LocalGridStorage localGridStorage;
-    private BuildPath buildPath;
     public float lengthWidth = 10.0f;
     public float gridIntervals = 1.0f;
-    public Vector3 macroGridWaypointCoordinates = Vector3.zero;
+    public Vector3 macroGridWaypointCoordinates;
     public GameObject waypointTemplate;
     public LocalGridDataType[,] localGrid = new LocalGridDataType[10,10];
 
+    void Start()
+    {
+        BuildLocalGrid();
+    }
+
     public void BuildLocalGrid()
     {
-        localGridStorage = GetComponent<LocalGridStorage>();
+        localGridStorage = GameObject.Find("DungeonMaster").GetComponent<LocalGridStorage>();
+
+        //Set the starting position relative to the module, store a copy of it as a default. 
+        macroGridWaypointCoordinates = transform.position;
+        macroGridWaypointCoordinates -= new Vector3(4.5f, 4.5f, 0.0f);
+        Vector3 defaultVal = macroGridWaypointCoordinates;
+
         //Blank GameObject that acts as a template for instantiation.
         //It'll be destroyed at the end of generation. 
-        
         waypointTemplate.transform.position = new Vector3(1000f, 1000f, 1000f);
 
         GameObject macroGridHolder = new GameObject();
-        macroGridHolder.name = "MacroGridParent";
+        macroGridHolder.name = "LocalGridParent";
         macroGridHolder.transform.position = new Vector3(500f, 500f, 500f);
 
         //Creates rows and columns, adjusting the position by the given intervals each time.
@@ -46,7 +55,7 @@ public class LocalGridSpawner_Room : MonoBehaviour
             }
             
             //Bump the x coordinates, reset the z.
-            macroGridWaypointCoordinates.y = 0.0f;
+            macroGridWaypointCoordinates.y = defaultVal.y;
             macroGridWaypointCoordinates.x += gridIntervals;
         }
     }

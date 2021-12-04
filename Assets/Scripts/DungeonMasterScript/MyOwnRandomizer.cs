@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MyOwnRandomizer : MonoBehaviour
 {
-    public bool TwoNumberRandomizer(float x, float y)
+    public static bool TwoNumberRandomizer(float x, float y)
     {
         int randomNumber = (int)UnityEngine.Random.Range(x, y);
         if(randomNumber <= 50)

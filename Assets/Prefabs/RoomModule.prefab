@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5114863422651558661}
   - component: {fileID: 8312628574145771437}
   - component: {fileID: 7891379216761665997}
+  - component: {fileID: -7434602549912079990}
   m_Layer: 0
   m_Name: RoomModule
   m_TagString: Room
@@ -99,3 +100,17 @@ MonoBehaviour:
   gridIntervals: 1
   macroGridWaypointCoordinates: {x: 0, y: 0, z: 0}
   waypointTemplate: {fileID: 4544952501736550106, guid: 66802862e1a2abd49bf8845265ca380f, type: 3}
+--- !u!114 &-7434602549912079990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2411376951775025841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72003e292af302943b96f295e06858ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xAccessKey: 0
+  yAccessKey: 0
