@@ -8,6 +8,7 @@ public class BranchDungeon : MonoBehaviour
     private BuildPath buildPath;
     private MacroGridStorage macroGridStorage;
     private ModulePrefabs modulePrefabs;
+    private SetMacroGrid setMacroGrid;
     #endregion
 
     #region PrivateInts_AccessKeys_BranchesGenerated
@@ -26,6 +27,8 @@ public class BranchDungeon : MonoBehaviour
     private Vector3 endOfBranchPosition;
 
     public int numberOfBranches = 2;
+    public float lengthOfBranchesMin = 2.0f;
+    public float lengthOfBranchesMax = 3.0f;
 
     public void Branch()
     {
@@ -33,6 +36,7 @@ public class BranchDungeon : MonoBehaviour
         buildPath = GetComponent<BuildPath>();
         macroGridStorage = GetComponent<MacroGridStorage>();
         modulePrefabs = GetComponent<ModulePrefabs>();
+        setMacroGrid = GetComponent<SetMacroGrid>();
         #endregion
 
         Debug.Log("In Branch- about to enter generation phase");
@@ -58,20 +62,22 @@ public class BranchDungeon : MonoBehaviour
                             {
                                 if(MyOwnRandomizer.TwoNumberRandomizer(0.0f, 100.0f))
                                 {
-                                    endOfBranchPosition.x += MyOwnRandomizer.TwoNumberIntReturn(2.0f, 3.0f) * 10.0f;
+                                    endOfBranchPosition.x += MyOwnRandomizer.TwoNumberIntReturn(lengthOfBranchesMin, lengthOfBranchesMax) * setMacroGrid.gridIntervals;
                                 }else
-                                    endOfBranchPosition.x -= MyOwnRandomizer.TwoNumberIntReturn(2.0f, 3.0f) * 10.0f;
+                                    endOfBranchPosition.x -= MyOwnRandomizer.TwoNumberIntReturn(lengthOfBranchesMin, lengthOfBranchesMax) * setMacroGrid.gridIntervals;
                                 
-                                rotateHall = true;
+                                rotateHall = false;
                             }else
                             {
                                 if(MyOwnRandomizer.TwoNumberRandomizer(0.0f, 100.0f))
-                                    endOfBranchPosition.y += MyOwnRandomizer.TwoNumberIntReturn(2.0f, 3.0f) * 10.0f;
+                                    endOfBranchPosition.y += MyOwnRandomizer.TwoNumberIntReturn(lengthOfBranchesMin, lengthOfBranchesMax) * setMacroGrid.gridIntervals;
                                 else
-                                    endOfBranchPosition.y -= MyOwnRandomizer.TwoNumberIntReturn(2.0f, 3.0f) * 10.0f;
+                                    endOfBranchPosition.y -= MyOwnRandomizer.TwoNumberIntReturn(lengthOfBranchesMin, lengthOfBranchesMax) * setMacroGrid.gridIntervals;
                                 
-                                rotateHall = false;
+                                rotateHall = true;
                             }
+
+                            Debug.Log(endOfBranchPosition);
 
                             BuildBranch(endOfBranchPosition);
                             branchesGenerated++;
@@ -82,7 +88,13 @@ public class BranchDungeon : MonoBehaviour
 
             foreach(KeyValuePair<Vector3, GameObject> keyValuePair in localModuleDictionary)
             {
-                macroGridStorage.moduleDictionary.Add(keyValuePair.Key, keyValuePair.Value);
+                Vector3 tempKey = keyValuePair.Key;
+                GameObject tempValue = keyValuePair.Value;
+                if(macroGridStorage.moduleDictionary.ContainsKey(tempKey))
+                {
+                    macroGridStorage.moduleDictionary[tempKey] = tempValue;
+                }else
+                    macroGridStorage.moduleDictionary.Add(tempKey, tempValue);
             }
         }
     }
@@ -92,65 +104,78 @@ public class BranchDungeon : MonoBehaviour
         int roomOrHallModule = 1;
         do
         {
-            #region MoveChecking
-            Vector3 closePos;
-
-            Vector3[] surroundingWaypoints = new Vector3[4];
-            for(int i = 0; i < 4; i++)
+            if(buildPath.buildVertical)
             {
-                if(i == 0)
-                    surroundingWaypoints[0] = macroGridStorage.macroGridPoints[(accessKeyX + 1), accessKeyY].transform.position;
-                else if(i==1)
-                    surroundingWaypoints[1] = macroGridStorage.macroGridPoints[accessKeyX, (accessKeyY + 1)].transform.position;
-                else if(i==2)
-                    surroundingWaypoints[2] = macroGridStorage.macroGridPoints[accessKeyX, (accessKeyY - 1)].transform.position;
+                if(buildPath.buildDirection)
+                    accessKeyY--;
                 else
-                    surroundingWaypoints[3] = macroGridStorage.macroGridPoints[(accessKeyX - 1), accessKeyY].transform.position;
+                    accessKeyY++;
             }
-
-            closePos = surroundingWaypoints[0];
-
-            for(int i = 1; i < 3; i++)
+            else
             {
-                if(Vector3.Distance(closePos, endOfBranch) > Vector3.Distance(surroundingWaypoints[i], endOfBranch))
-                {
-                    closePos = surroundingWaypoints[i];
-                }
+                if(buildPath.buildDirection)
+                    accessKeyX--;
+                else
+                    accessKeyX++;
             }
+            #region MoveChecking
+        //     Vector3 closePos;
 
-           if(closePos == surroundingWaypoints[0])
-           {
-               accessKeyX++;
-               rotateHall = true;
-           }  
-           else if(closePos == surroundingWaypoints[1])
-               accessKeyY++;
-           else if(closePos == surroundingWaypoints[2])
-               accessKeyY--;
-           else
-           {
-               accessKeyX--;
-               rotateHall = true;
-           }
+        //     Vector3[] surroundingWaypoints = new Vector3[4];
+        //     for(int i = 0; i < 4; i++)
+        //     {
+        //         if(i == 0)
+        //             surroundingWaypoints[0] = macroGridStorage.macroGridPoints[(accessKeyX + 1), accessKeyY].transform.position;
+        //         else if(i==1)
+        //             surroundingWaypoints[1] = macroGridStorage.macroGridPoints[accessKeyX, (accessKeyY + 1)].transform.position;
+        //         else if(i==2)
+        //             surroundingWaypoints[2] = macroGridStorage.macroGridPoints[accessKeyX, (accessKeyY - 1)].transform.position;
+        //         else
+        //             surroundingWaypoints[3] = macroGridStorage.macroGridPoints[(accessKeyX - 1), accessKeyY].transform.position;
+        //     }
+
+        //     closePos = surroundingWaypoints[0];
+
+        //     for(int i = 1; i < 3; i++)
+        //     {
+        //         if(Vector3.Distance(closePos, endOfBranch) > Vector3.Distance(surroundingWaypoints[i], endOfBranch))
+        //         {
+        //             closePos = surroundingWaypoints[i];
+        //         }
+        //     }
+
+        //    if(closePos == surroundingWaypoints[0])
+        //    {
+        //        accessKeyX++;
+        //        rotateHall = true;
+        //    }  
+        //    else if(closePos == surroundingWaypoints[1])
+        //        accessKeyY++;
+        //    else if(closePos == surroundingWaypoints[2])
+        //        accessKeyY--;
+        //    else
+        //    {
+        //        accessKeyX--;
+        //        rotateHall = true;
+        //    }
             #endregion
 
             if(roomOrHallModule % 2 == 0)
             {
                 GameObject tempModule = Instantiate(modulePrefabs.roomPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
-                if(rotateHall)
-                    rotateHall = false;
-
                 localModuleDictionary.Add(tempModule.transform.position, tempModule);
+                tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
+                tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
+                tempModule.GetComponent<AccessKeyHolder>().phaseDesignation = "Branch";
             }else
             {
                 GameObject tempModule = Instantiate(modulePrefabs.HallPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
                 if(rotateHall)
-                {
-                    Vector3 rotationStation = new Vector3(0.0f, 0.0f, 90.0f);
-                    tempModule.transform.Rotate(rotationStation, Space.Self);
-                    rotateHall = false;
-                }
+                    tempModule.transform.Rotate(new Vector3(0.0f, 90.0f, 0.0f));
                 localModuleDictionary.Add(tempModule.transform.position, tempModule);
+                tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
+                tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
+                tempModule.GetComponent<AccessKeyHolder>().phaseDesignation = "Branch";
             }
 
             roomOrHallModule++;
@@ -162,9 +187,20 @@ public class BranchDungeon : MonoBehaviour
                 continueBuild = false;
                 if(localModuleDictionary[endOfBranch].gameObject.CompareTag("Hall"))
                 {
-                    Destroy(localModuleDictionary[endOfBranch].gameObject);
-                    localModuleDictionary.Remove(endOfBranch);
+                   if(buildPath.buildVertical)
+                    {
+                        endOfBranch += new Vector3(0.0f, setMacroGrid.gridIntervals, 0.0f);
+                        accessKeyY++;
+                    }else
+                    {
+                        endOfBranch += new Vector3(setMacroGrid.gridIntervals, 0.0f, 0.0f);
+                        accessKeyX++;
+                    }
                     GameObject tempModule = Instantiate(modulePrefabs.roomPrefabs[0], endOfBranch, Quaternion.identity);
+                    macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
+                    tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
+                    tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
+                    tempModule.GetComponent<AccessKeyHolder>().phaseDesignation = "Branch";
                 }
             }
             

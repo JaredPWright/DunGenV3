@@ -306,6 +306,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6140435271524080388, guid: 59b2f27669dea9f4aa7e0ef02deca265, type: 3}
+      propertyPath: numberOfBranches
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6140435271524080388, guid: 59b2f27669dea9f4aa7e0ef02deca265, type: 3}
+      propertyPath: lengthOfBranchesMax
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6140435271524080388, guid: 59b2f27669dea9f4aa7e0ef02deca265, type: 3}
+      propertyPath: lengthOfBranchesMin
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8199935958272807060, guid: 59b2f27669dea9f4aa7e0ef02deca265, type: 3}
       propertyPath: m_Name
       value: DungeonMaster
