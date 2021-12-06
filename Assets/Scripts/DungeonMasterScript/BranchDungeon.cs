@@ -66,7 +66,7 @@ public class BranchDungeon : MonoBehaviour
                                 }else
                                     endOfBranchPosition.x -= MyOwnRandomizer.TwoNumberIntReturn(lengthOfBranchesMin, lengthOfBranchesMax) * setMacroGrid.gridIntervals;
                                 
-                                rotateHall = false;
+                                rotateHall = true;
                             }else
                             {
                                 if(MyOwnRandomizer.TwoNumberRandomizer(0.0f, 100.0f))
@@ -74,7 +74,7 @@ public class BranchDungeon : MonoBehaviour
                                 else
                                     endOfBranchPosition.y -= MyOwnRandomizer.TwoNumberIntReturn(lengthOfBranchesMin, lengthOfBranchesMax) * setMacroGrid.gridIntervals;
                                 
-                                rotateHall = true;
+                                rotateHall = false;
                             }
 
                             Debug.Log(endOfBranchPosition);
@@ -104,7 +104,7 @@ public class BranchDungeon : MonoBehaviour
         int roomOrHallModule = 1;
         do
         {
-            if(buildPath.buildVertical)
+            if(!buildPath.buildVertical)
             {
                 if(buildPath.buildDirection)
                     accessKeyY--;

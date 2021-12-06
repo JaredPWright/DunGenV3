@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MacroGridStorage : MonoBehaviour
 {
-    public GameObject[,] macroGridPoints = new GameObject[100, 100];
+    public SetMacroGrid setMacroGrid;
+    public GameObject[,] macroGridPoints = new GameObject[101, 101];
     public Dictionary<Vector3, GameObject> moduleDictionary = new Dictionary<Vector3, GameObject>();
 }
