@@ -127,7 +127,10 @@ public class BuildPath : MonoBehaviour
                 {
                     Debug.Log("Caught an interloper");
                 }else
+                {
+                    Debug.Log("Access Keys: (" + accessKeyX.ToString() + ", " + accessKeyY.ToString() + "), Position: " + tempModule.transform.position);
                     macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
+                }
             }else
             {
                 GameObject tempModule = Instantiate(modulePrefabs.HallPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
@@ -144,7 +147,10 @@ public class BuildPath : MonoBehaviour
                 {
                     Debug.Log("Caught an interloper");
                 }else
+                {
+                    Debug.Log("Access Keys: (" + accessKeyX.ToString() + ", " + accessKeyY.ToString() + "), Position: " + tempModule.transform.position);
                     macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
+                }
             }
 
             roomOrHallModule++;
@@ -160,16 +166,16 @@ public class BuildPath : MonoBehaviour
                     {
                         endPos += new Vector3(0.0f, setMacroGrid.gridIntervals, 0.0f);
                         if(buildDirection)
-                            accessKeyY++;
-                        else
                             accessKeyY--;
+                        else
+                            accessKeyY++;
                     }else
                     {
                         endPos += new Vector3(setMacroGrid.gridIntervals, 0.0f, 0.0f);
                         if(buildDirection)
-                            accessKeyX++;
-                        else
                             accessKeyX--;
+                        else
+                            accessKeyX++;
                     }
                     GameObject tempModule = Instantiate(modulePrefabs.roomPrefabs[0], endPos, Quaternion.identity);
                     macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
