@@ -107,60 +107,45 @@ public class BranchDungeon : MonoBehaviour
             if(!buildPath.buildVertical)
             {
                 if(buildPath.buildDirection)
+                {
                     accessKeyY--;
+                    if(accessKeyY < 0)
+                    {
+                        break;
+                    }
+                }
                 else
+                {
                     accessKeyY++;
+                    if(accessKeyY > setMacroGrid.lengthWidth / 10)
+                    {
+                        break;
+                    }
+                }
             }
             else
             {
                 if(buildPath.buildDirection)
+                {
                     accessKeyX--;
-                else
+                    if(accessKeyX < 0)
+                    {
+                        break;
+                    }
+                }else
+                {
                     accessKeyX++;
+                    if(accessKeyX > setMacroGrid.lengthWidth / 10)
+                    {
+                        break;
+                    }
+                }
             }
-            #region MoveChecking
-        //     Vector3 closePos;
 
-        //     Vector3[] surroundingWaypoints = new Vector3[4];
-        //     for(int i = 0; i < 4; i++)
-        //     {
-        //         if(i == 0)
-        //             surroundingWaypoints[0] = macroGridStorage.macroGridPoints[(accessKeyX + 1), accessKeyY].transform.position;
-        //         else if(i==1)
-        //             surroundingWaypoints[1] = macroGridStorage.macroGridPoints[accessKeyX, (accessKeyY + 1)].transform.position;
-        //         else if(i==2)
-        //             surroundingWaypoints[2] = macroGridStorage.macroGridPoints[accessKeyX, (accessKeyY - 1)].transform.position;
-        //         else
-        //             surroundingWaypoints[3] = macroGridStorage.macroGridPoints[(accessKeyX - 1), accessKeyY].transform.position;
-        //     }
-
-        //     closePos = surroundingWaypoints[0];
-
-        //     for(int i = 1; i < 3; i++)
-        //     {
-        //         if(Vector3.Distance(closePos, endOfBranch) > Vector3.Distance(surroundingWaypoints[i], endOfBranch))
-        //         {
-        //             closePos = surroundingWaypoints[i];
-        //         }
-        //     }
-
-        //    if(closePos == surroundingWaypoints[0])
-        //    {
-        //        accessKeyX++;
-        //        rotateHall = true;
-        //    }  
-        //    else if(closePos == surroundingWaypoints[1])
-        //        accessKeyY++;
-        //    else if(closePos == surroundingWaypoints[2])
-        //        accessKeyY--;
-        //    else
-        //    {
-        //        accessKeyX--;
-        //        rotateHall = true;
-        //    }
-            #endregion
-
-            if(roomOrHallModule % 2 == 0)
+            if(macroGridStorage.moduleDictionary.ContainsKey(macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position))
+            {
+                continue;
+            }else if(roomOrHallModule % 2 == 0)
             {
                 GameObject tempModule = Instantiate(modulePrefabs.roomPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
                 localModuleDictionary.Add(tempModule.transform.position, tempModule);

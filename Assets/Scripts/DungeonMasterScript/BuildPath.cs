@@ -49,6 +49,7 @@ public class BuildPath : MonoBehaviour
         if(buildVertical)
         {
             endAccessKeyX = accessKeyX;
+            rotateHall = false;
             buildDirection = accessKeyY < (macroGridSize / 2);
             if(buildDirection)
                 endAccessKeyY = MyOwnRandomizer.TwoNumberIntReturn(accessKeyY + 1, macroGridSize);
@@ -57,6 +58,7 @@ public class BuildPath : MonoBehaviour
         }
         else
         {
+            rotateHall = true;
             buildDirection = accessKeyX < (macroGridSize / 2);
             if(buildDirection)
                 endAccessKeyX = MyOwnRandomizer.TwoNumberIntReturn(accessKeyX + 1, macroGridSize);
@@ -80,69 +82,52 @@ public class BuildPath : MonoBehaviour
             if(buildVertical)
             {
                 if(buildDirection)
-                    accessKeyY++;
+                    {
+                        accessKeyY++;
+                        if(accessKeyY > macroGridSize)
+                        {
+                            break;
+                        }
+                    }
                 else
-                    accessKeyY--;
+                    {
+                        accessKeyY--;
+                        if(accessKeyY < 0)
+                        {
+                            break;
+                        }
+                    }
             }
             else
             {
                 if(buildDirection)
-                    accessKeyX++;
+                    {
+                        accessKeyX++;
+                        if(accessKeyX > macroGridSize)
+                        {
+                            break;
+                        }
+                    }
                 else
-                    accessKeyX--;
+                    {
+                        accessKeyX--;
+                        if(accessKeyX < 0)
+                        {
+                            break;
+                        }
+                    }
             }
 
-            #region MoveChecking
-        //     Vector3 closePos;
-
-        //     Vector3[] surroundingWaypoints = new Vector3[4];
-        //     for(int i = 0; i < 4; i++)
-        //     {
-        //         if(i == 0)
-        //             surroundingWaypoints[0] = macroGridStorage.macroGridPoints[(accessKeyX + 1), accessKeyY].transform.position;
-        //         else if(i==1)
-        //             surroundingWaypoints[1] = macroGridStorage.macroGridPoints[accessKeyX, (accessKeyY + 1)].transform.position;
-        //         else if(i==2)
-        //             surroundingWaypoints[2] = macroGridStorage.macroGridPoints[accessKeyX, (accessKeyY - 1)].transform.position;
-        //         else
-        //             surroundingWaypoints[3] = macroGridStorage.macroGridPoints[(accessKeyX - 1), accessKeyY].transform.position;
-        //     }
-
-        //     closePos = surroundingWaypoints[0];
-
-        //     for(int i = 1; i < 3; i++)
-        //     {
-        //         if(Vector3.Distance(closePos, endPos) > Vector3.Distance(surroundingWaypoints[i], endPos))
-        //         {
-        //             closePos = surroundingWaypoints[i];
-        //         }
-        //     }
-
-        //    if(closePos == surroundingWaypoints[0])
-        //    {
-        //        accessKeyX++;
-        //        rotateHall = true;
-        //    }  
-        //    else if(closePos == surroundingWaypoints[1])
-        //        accessKeyY++;
-        //    else if(closePos == surroundingWaypoints[2])
-        //        accessKeyY--;
-        //    else
-        //    {
-        //        accessKeyX--;
-        //        rotateHall = true;
-        //    }
-             #endregion
-
-            if(roomOrHallModule % 2 == 0)
+            if(macroGridStorage.moduleDictionary.ContainsKey(macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position))
+            {
+                continue;
+            }else if(roomOrHallModule % 2 == 0)
             {
                 //Create a module, save its access key data for potential branching later
                 GameObject tempModule = Instantiate(modulePrefabs.roomPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
                 tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
                 tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
                 tempModule.GetComponent<AccessKeyHolder>().phaseDesignation = "Trunk";
-                if(rotateHall)
-                    rotateHall = false;
 
                 macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
             }else
@@ -155,7 +140,6 @@ public class BuildPath : MonoBehaviour
                 {
                     Vector3 rotationStation = new Vector3(0.0f, 0.0f, 90.0f);
                     tempModule.transform.Rotate(rotationStation, Space.Self);
-                    rotateHall = false;
                 }
                 macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
             }

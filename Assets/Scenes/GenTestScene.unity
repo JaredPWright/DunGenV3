@@ -299,6 +299,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1716437454 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8199935958272807059, guid: 59b2f27669dea9f4aa7e0ef02deca265, type: 3}
+  m_PrefabInstance: {fileID: 8199935958942773511}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8840d1f6185f8074f9747d9e6c20ad1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8199935958942773511
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -318,6 +329,10 @@ PrefabInstance:
       propertyPath: lengthOfBranchesMin
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8199935958272807056, guid: 59b2f27669dea9f4aa7e0ef02deca265, type: 3}
+      propertyPath: setMacroGrid
+      value: 
+      objectReference: {fileID: 1716437454}
     - target: {fileID: 8199935958272807060, guid: 59b2f27669dea9f4aa7e0ef02deca265, type: 3}
       propertyPath: m_Name
       value: DungeonMaster
