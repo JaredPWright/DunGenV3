@@ -55,8 +55,7 @@ public class BuildPath : MonoBehaviour
                 endAccessKeyY = MyOwnRandomizer.TwoNumberIntReturn(accessKeyY + 1, macroGridSize);
             else
                 endAccessKeyY = MyOwnRandomizer.TwoNumberIntReturn(1.0f, accessKeyY);
-        }
-        else
+        }else
         {
             rotateHall = true;
             buildDirection = accessKeyX < (macroGridSize / 2);
@@ -75,6 +74,7 @@ public class BuildPath : MonoBehaviour
         //Get and store access keys
         startRoom.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
         startRoom.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
+        startRoom.GetComponent<AccessKeyHolder>().phaseDesignation = "Trunk";
 
         //Begin build operations
         do
@@ -82,46 +82,40 @@ public class BuildPath : MonoBehaviour
             if(buildVertical)
             {
                 if(buildDirection)
+                {
+                    accessKeyY++;
+                    if(accessKeyY > macroGridSize)
                     {
-                        accessKeyY++;
-                        if(accessKeyY > macroGridSize)
-                        {
-                            break;
-                        }
+                        break;
                     }
-                else
+                }else
+                {
+                    accessKeyY--;
+                    if(accessKeyY < 0)
                     {
-                        accessKeyY--;
-                        if(accessKeyY < 0)
-                        {
-                            break;
-                        }
+                        break;
                     }
-            }
-            else
+                }
+            }else
             {
                 if(buildDirection)
+                {
+                    accessKeyX++;
+                    if(accessKeyX > macroGridSize)
                     {
-                        accessKeyX++;
-                        if(accessKeyX > macroGridSize)
-                        {
-                            break;
-                        }
+                        break;
                     }
-                else
+                }else
+                {
+                    accessKeyX--;
+                    if(accessKeyX < 0)
                     {
-                        accessKeyX--;
-                        if(accessKeyX < 0)
-                        {
-                            break;
-                        }
+                        break;
                     }
+                }
             }
 
-            if(macroGridStorage.moduleDictionary.ContainsKey(macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position))
-            {
-                continue;
-            }else if(roomOrHallModule % 2 == 0)
+            if(roomOrHallModule % 2 == 0)
             {
                 //Create a module, save its access key data for potential branching later
                 GameObject tempModule = Instantiate(modulePrefabs.roomPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
@@ -129,7 +123,11 @@ public class BuildPath : MonoBehaviour
                 tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
                 tempModule.GetComponent<AccessKeyHolder>().phaseDesignation = "Trunk";
 
-                macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
+                if(macroGridStorage.moduleDictionary.ContainsKey(tempModule.transform.position / 10))
+                {
+                    Debug.Log("Caught an interloper");
+                }else
+                    macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
             }else
             {
                 GameObject tempModule = Instantiate(modulePrefabs.HallPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
@@ -141,7 +139,12 @@ public class BuildPath : MonoBehaviour
                     Vector3 rotationStation = new Vector3(0.0f, 0.0f, 90.0f);
                     tempModule.transform.Rotate(rotationStation, Space.Self);
                 }
-                macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
+                
+                if(macroGridStorage.moduleDictionary.ContainsKey(tempModule.transform.position / 10))
+                {
+                    Debug.Log("Caught an interloper");
+                }else
+                    macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
             }
 
             roomOrHallModule++;
@@ -156,11 +159,17 @@ public class BuildPath : MonoBehaviour
                     if(buildVertical)
                     {
                         endPos += new Vector3(0.0f, setMacroGrid.gridIntervals, 0.0f);
-                        accessKeyY++;
+                        if(buildDirection)
+                            accessKeyY++;
+                        else
+                            accessKeyY--;
                     }else
                     {
                         endPos += new Vector3(setMacroGrid.gridIntervals, 0.0f, 0.0f);
-                        accessKeyX++;
+                        if(buildDirection)
+                            accessKeyX++;
+                        else
+                            accessKeyX--;
                     }
                     GameObject tempModule = Instantiate(modulePrefabs.roomPrefabs[0], endPos, Quaternion.identity);
                     macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
