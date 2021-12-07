@@ -129,7 +129,7 @@ public class BuildPath : MonoBehaviour
                 }else
                 {
                     Debug.Log("Access Keys: (" + accessKeyX.ToString() + ", " + accessKeyY.ToString() + "), Position: " + tempModule.transform.position);
-                    macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
+                    TryAdd(macroGridStorage.moduleDictionary, tempModule.transform.position, tempModule);
                 }
             }else
             {
@@ -149,7 +149,7 @@ public class BuildPath : MonoBehaviour
                 }else
                 {
                     Debug.Log("Access Keys: (" + accessKeyX.ToString() + ", " + accessKeyY.ToString() + "), Position: " + tempModule.transform.position);
-                    macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
+                    TryAdd(macroGridStorage.moduleDictionary, tempModule.transform.position, tempModule);
                 }
             }
 
@@ -178,7 +178,8 @@ public class BuildPath : MonoBehaviour
                             accessKeyX++;
                     }
                     GameObject tempModule = Instantiate(modulePrefabs.roomPrefabs[0], endPos, Quaternion.identity);
-                    macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
+
+                    TryAdd(macroGridStorage.moduleDictionary, tempModule.transform.position, tempModule);
                     tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
                     tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
                     tempModule.GetComponent<AccessKeyHolder>().phaseDesignation = "Trunk";
@@ -189,5 +190,21 @@ public class BuildPath : MonoBehaviour
         
         Debug.Log("Calling Branch");
         branchDungeon.Branch();
+    }
+
+    public static bool TryAdd<TKey, TValue>(IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    {
+        if (dictionary == null)
+        {
+            throw new ArgumentNullException(nameof(dictionary));
+        }
+
+        if (!dictionary.ContainsKey(key))
+        {
+            dictionary.Add(key, value);
+            return true;
+        }
+
+        return false;
     }
 }

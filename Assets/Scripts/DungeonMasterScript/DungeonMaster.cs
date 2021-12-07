@@ -49,6 +49,15 @@ public class DungeonMaster : MonoBehaviour
             }
 
         }
+
+        foreach(KeyValuePair<Vector3, GameObject> kvp in macroGridStorage.moduleDictionary)
+        {
+            if(!(kvp.Value.CompareTag("Branch") || kvp.Value.CompareTag("Trunk")))
+            {
+                Destroy(kvp.Value.gameObject);
+                macroGridStorage.moduleDictionary.Remove(kvp.Key);
+            }
+        }
         Debug.Log("Exiting foreach");
     }
 }

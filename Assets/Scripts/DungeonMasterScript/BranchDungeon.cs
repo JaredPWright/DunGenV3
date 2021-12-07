@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -150,7 +151,7 @@ public class BranchDungeon : MonoBehaviour
                 GameObject tempModule;
                 tempModule = Instantiate(modulePrefabs.roomPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
                 Debug.Log("Access Keys: (" + accessKeyX.ToString() + ", " + accessKeyY.ToString() + "), Position: " + tempModule.transform.position);
-                localModuleDictionary.Add(tempModule.transform.position, tempModule);
+                TryAdd(localModuleDictionary, tempModule.transform.position, tempModule);
                 tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
                 tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
                 tempModule.GetComponent<AccessKeyHolder>().phaseDesignation = "Branch";
@@ -161,7 +162,7 @@ public class BranchDungeon : MonoBehaviour
                 Debug.Log("Access Keys: (" + accessKeyX.ToString() + ", " + accessKeyY.ToString() + "), Position: " + tempModule.transform.position);
                 if(rotateHall)
                     tempModule.transform.Rotate(new Vector3(0.0f, 90.0f, 0.0f));
-                localModuleDictionary.Add(tempModule.transform.position, tempModule);
+                TryAdd(localModuleDictionary, tempModule.transform.position, tempModule);
                 tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
                 tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
                 tempModule.GetComponent<AccessKeyHolder>().phaseDesignation = "Branch";
@@ -192,7 +193,7 @@ public class BranchDungeon : MonoBehaviour
                             accessKeyX++;
                     }
                     GameObject tempModule = Instantiate(modulePrefabs.roomPrefabs[0], endOfBranch, Quaternion.identity);
-                    macroGridStorage.moduleDictionary.Add(tempModule.transform.position, tempModule);
+                    TryAdd(macroGridStorage.moduleDictionary, tempModule.transform.position, tempModule);
                     tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
                     tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
                     tempModule.GetComponent<AccessKeyHolder>().phaseDesignation = "Branch";
@@ -200,5 +201,21 @@ public class BranchDungeon : MonoBehaviour
             }
             
         }while(continueBuild);
+    }
+
+    public static bool TryAdd<TKey, TValue>(IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    {
+        if (dictionary == null)
+        {
+            throw new ArgumentNullException(nameof(dictionary));
+        }
+
+        if (!dictionary.ContainsKey(key))
+        {
+            dictionary.Add(key, value);
+            return true;
+        }
+
+        return false;
     }
 }
