@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8312628574145771437}
   - component: {fileID: 7891379216761665997}
   - component: {fileID: -7434602549912079990}
+  - component: {fileID: 1551872974495700732}
+  - component: {fileID: 8289885200886575807}
   m_Layer: 0
   m_Name: RoomModule
   m_TagString: Room
@@ -114,3 +116,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xAccessKey: 0
   yAccessKey: 0
+  phaseDesignation: 
+--- !u!114 &1551872974495700732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2411376951775025841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b019c5cd08a401f4192478bb7ed117a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefabs:
+  - {fileID: 2819511867619734184, guid: 678c3ed74caed6d4bba57a3a0183c62f, type: 3}
+--- !u!114 &8289885200886575807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2411376951775025841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d7f7384bb056a2479c412ddc2895569, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localGrid: {fileID: 0}
+  popMaster: {fileID: 0}
+  itemPrefabs:
+  - {fileID: 3665141383711517947, guid: 75f12e93402206040856bea10cee80a3, type: 3}
+  obstaclePrefabs:
+  - {fileID: 6707738883628049517, guid: 32fb5b309f70c714e902ef6a3e5e8f35, type: 3}

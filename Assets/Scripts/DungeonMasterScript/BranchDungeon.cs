@@ -10,6 +10,7 @@ public class BranchDungeon : MonoBehaviour
     private MacroGridStorage macroGridStorage;
     private ModulePrefabs modulePrefabs;
     private SetMacroGrid setMacroGrid;
+    private CallPopulate callPopulate;
     #endregion
 
     #region PrivateInts_AccessKeys_BranchesGenerated
@@ -38,6 +39,7 @@ public class BranchDungeon : MonoBehaviour
         macroGridStorage = GetComponent<MacroGridStorage>();
         modulePrefabs = GetComponent<ModulePrefabs>();
         setMacroGrid = GetComponent<SetMacroGrid>();
+        callPopulate = GetComponent<CallPopulate>();
         #endregion
 
         Debug.Log("In Branch- about to enter generation phase");
@@ -87,16 +89,7 @@ public class BranchDungeon : MonoBehaviour
                 }
             }while(branchesGenerated < numberOfBranches);
 
-            foreach(KeyValuePair<Vector3, GameObject> keyValuePair in localModuleDictionary)
-            {
-                Vector3 tempKey = keyValuePair.Key;
-                GameObject tempValue = keyValuePair.Value;
-                if(macroGridStorage.moduleDictionary.ContainsKey(tempKey))
-                {
-                    macroGridStorage.moduleDictionary[tempKey] = tempValue;
-                }else
-                    macroGridStorage.moduleDictionary.Add(tempKey, tempValue);
-            }
+            callPopulate.PopulateDungeon();
         }
     }
 
@@ -143,15 +136,15 @@ public class BranchDungeon : MonoBehaviour
                 }
             }
 
-            if(macroGridStorage.moduleDictionary.ContainsKey(macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position))
-            {
-                continue;
-            }else if(roomOrHallModule % 2 == 0)
+            if(roomOrHallModule % 2 == 0)
             {
                 GameObject tempModule;
                 tempModule = Instantiate(modulePrefabs.roomPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
                 Debug.Log("Access Keys: (" + accessKeyX.ToString() + ", " + accessKeyY.ToString() + "), Position: " + tempModule.transform.position);
-                TryAdd(localModuleDictionary, tempModule.transform.position, tempModule);
+                if(TryAdd(localModuleDictionary, tempModule.transform.position, tempModule))
+                {
+                    macroGridStorage.roomModules.Add(tempModule);
+                }
                 tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
                 tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
                 tempModule.GetComponent<AccessKeyHolder>().phaseDesignation = "Branch";
@@ -161,7 +154,12 @@ public class BranchDungeon : MonoBehaviour
                 tempModule = Instantiate(modulePrefabs.HallPrefabs[0], macroGridStorage.macroGridPoints[accessKeyX, accessKeyY].transform.position, Quaternion.identity);
                 Debug.Log("Access Keys: (" + accessKeyX.ToString() + ", " + accessKeyY.ToString() + "), Position: " + tempModule.transform.position);
                 if(rotateHall)
-                    tempModule.transform.Rotate(new Vector3(0.0f, 90.0f, 0.0f));
+                {
+                    tempModule.transform.Rotate(new Vector3(0.0f, 0.0f, 90.0f));
+                    tempModule.GetComponent<LocalGridSpawner_Hall>().amRotated = true;
+                    tempModule.GetComponent<LocalGridSpawner_Hall>().BuildLocalGrid();
+                }else
+                    tempModule.GetComponent<LocalGridSpawner_Hall>().BuildLocalGrid();
                 TryAdd(localModuleDictionary, tempModule.transform.position, tempModule);
                 tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
                 tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
@@ -177,7 +175,7 @@ public class BranchDungeon : MonoBehaviour
                 continueBuild = false;
                 if(localModuleDictionary[endOfBranch].gameObject.CompareTag("Hall"))
                 {
-                   if(buildPath.buildVertical)
+                   if(!buildPath.buildVertical)
                     {
                         endOfBranch += new Vector3(0.0f, setMacroGrid.gridIntervals, 0.0f);
                         if(!buildPath.buildDirection)
@@ -193,7 +191,10 @@ public class BranchDungeon : MonoBehaviour
                             accessKeyX++;
                     }
                     GameObject tempModule = Instantiate(modulePrefabs.roomPrefabs[0], endOfBranch, Quaternion.identity);
-                    TryAdd(macroGridStorage.moduleDictionary, tempModule.transform.position, tempModule);
+                    if(TryAdd(localModuleDictionary, tempModule.transform.position, tempModule))
+                    {
+                        macroGridStorage.roomModules.Add(tempModule);
+                    }
                     tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
                     tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
                     tempModule.GetComponent<AccessKeyHolder>().phaseDesignation = "Branch";
@@ -203,7 +204,7 @@ public class BranchDungeon : MonoBehaviour
         }while(continueBuild);
     }
 
-    public static bool TryAdd<TKey, TValue>(IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    public bool TryAdd<TKey, TValue>(IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
     {
         if (dictionary == null)
         {

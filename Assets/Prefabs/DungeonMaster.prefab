@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 8199935958272807057}
   - component: {fileID: 6140435271524080388}
   - component: {fileID: 7372337727892412446}
+  - component: {fileID: 6840730949658332835}
+  - component: {fileID: 4433025889475761969}
   m_Layer: 0
   m_Name: DungeonMaster
   m_TagString: Untagged
@@ -51,6 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildVertical: 0
+  buildDirection: 0
 --- !u!114 &8199935958272807056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,6 +66,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a11ab358e1317428a77b7afbc91083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  setMacroGrid: {fileID: 0}
+  roomModules: []
 --- !u!114 &8199935958272807069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +140,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfBranches: 2
+  lengthOfBranchesMin: 2
+  lengthOfBranchesMax: 3
 --- !u!114 &7372337727892412446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,3 +154,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0cb72cc7c8f4b44983e2474bb19bbdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6840730949658332835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8199935958272807060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7759a6c848dfeb498232d944e4b74eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  howManyRoomsWithObstacles: 5
+  minObstacles: 0
+  maxObstacles: 3
+  howManyRoomsWithTreasure: 2
+  howManyRoomsWithEnemies: 8
+  minEnemies: 3
+  maxEnemies: 5
+--- !u!114 &4433025889475761969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8199935958272807060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffdfa75b52f15214d81476bfccbc4457, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomsWithItems: 0
+  roomsWithEnemies: 0

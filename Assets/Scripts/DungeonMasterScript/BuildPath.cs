@@ -129,7 +129,10 @@ public class BuildPath : MonoBehaviour
                 }else
                 {
                     Debug.Log("Access Keys: (" + accessKeyX.ToString() + ", " + accessKeyY.ToString() + "), Position: " + tempModule.transform.position);
-                    TryAdd(macroGridStorage.moduleDictionary, tempModule.transform.position, tempModule);
+                    if(TryAdd(macroGridStorage.moduleDictionary, tempModule.transform.position, tempModule))
+                    {
+                        macroGridStorage.roomModules.Add(tempModule);
+                    }
                 }
             }else
             {
@@ -140,7 +143,12 @@ public class BuildPath : MonoBehaviour
                 if(rotateHall)
                 {
                     Vector3 rotationStation = new Vector3(0.0f, 0.0f, 90.0f);
+                    tempModule.GetComponent<LocalGridSpawner_Hall>().amRotated = true;
+                    tempModule.GetComponent<LocalGridSpawner_Hall>().BuildLocalGrid();
                     tempModule.transform.Rotate(rotationStation, Space.Self);
+                }else
+                {
+                    tempModule.GetComponent<LocalGridSpawner_Hall>().BuildLocalGrid();
                 }
                 
                 if(macroGridStorage.moduleDictionary.ContainsKey(tempModule.transform.position / 10))
@@ -179,7 +187,10 @@ public class BuildPath : MonoBehaviour
                     }
                     GameObject tempModule = Instantiate(modulePrefabs.roomPrefabs[0], endPos, Quaternion.identity);
 
-                    TryAdd(macroGridStorage.moduleDictionary, tempModule.transform.position, tempModule);
+                    if(TryAdd(macroGridStorage.moduleDictionary, tempModule.transform.position, tempModule))
+                    {
+                        macroGridStorage.roomModules.Add(tempModule);
+                    }
                     tempModule.GetComponent<AccessKeyHolder>().xAccessKey = accessKeyX;
                     tempModule.GetComponent<AccessKeyHolder>().yAccessKey = accessKeyY;
                     tempModule.GetComponent<AccessKeyHolder>().phaseDesignation = "Trunk";
@@ -192,7 +203,7 @@ public class BuildPath : MonoBehaviour
         branchDungeon.Branch();
     }
 
-    public static bool TryAdd<TKey, TValue>(IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    public bool TryAdd<TKey, TValue>(IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
     {
         if (dictionary == null)
         {
