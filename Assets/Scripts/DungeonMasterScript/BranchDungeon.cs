@@ -89,7 +89,7 @@ public class BranchDungeon : MonoBehaviour
                 }
             }while(branchesGenerated < numberOfBranches);
 
-            callPopulate.PopulateDungeon();
+            //callPopulate.PopulateDungeon();
         }
     }
 

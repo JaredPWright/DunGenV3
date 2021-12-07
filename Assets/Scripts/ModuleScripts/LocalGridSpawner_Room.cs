@@ -59,12 +59,12 @@ public class LocalGridSpawner_Room : MonoBehaviour
             macroGridWaypointCoordinates.x += gridIntervals;
         }
 
-        // for(int i = 0; i < lengthWidth; i++)
-        // {
-        //     for(int j = 0; j < lengthWidth; j++)
-        //     {
-        //         Debug.Log("Printing LocalGrid: " + localGrid[i,j].traversable + " " + localGrid[i,j].waypointObject, this.gameObject);
-        //     }
-        // }
+        for(int i = 0; i < lengthWidth; i++)
+        {
+            for(int j = 0; j < lengthWidth; j++)
+            {
+                Debug.Log("Printing LocalGrid: " + localGrid[i,j].Traversable + " " + localGrid[i,j].WaypointObject, this.gameObject);
+            }
+        }
     }
 }

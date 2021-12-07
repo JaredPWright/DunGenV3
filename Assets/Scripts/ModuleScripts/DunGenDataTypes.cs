@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace DunGenDataTypes
 {
-    public class LocalGridDataType
+    [Serializable]public class LocalGridDataType
     {
         private GameObject waypointObject;
         public GameObject WaypointObject
@@ -33,8 +34,18 @@ namespace DunGenDataTypes
 
         public LocalGridDataType(GameObject newWaypoint, bool walkable)
         {
-            waypointObject = newWaypoint;
-            traversable = walkable;
+            WaypointObject = newWaypoint;
+            Traversable = walkable;
+        }
+
+        public bool ReturnTraversable()
+        {
+            return Traversable;
+        }
+
+        public GameObject ReturnWaypoint()
+        {
+            return WaypointObject;
         }
     }
 }

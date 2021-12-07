@@ -54,8 +54,11 @@ public class Item_ObstaclePopulation : MonoBehaviour
                 int accessKeyX = MyOwnRandomizer.TwoNumberIntReturn(0.0f, localGridSystem.lengthWidth);
                 int accessKeyY = MyOwnRandomizer.TwoNumberIntReturn(0.0f, localGridSystem.lengthWidth);
 
-                if(localGridSystem.localGrid[accessKeyX, accessKeyY].Traversable)
+                LocalGridDataType localGridType = localGridSystem.localGrid[accessKeyX, accessKeyY];
+                Debug.Log(localGridSystem.localGrid[accessKeyX, accessKeyY]);
+                if(localGridType.ReturnTraversable())
                 {
+                    Debug.Log("inside check");
                     GameObject tempItem;
                     tempItem = Instantiate(obstaclePrefabs[0], localGridSystem.localGrid[accessKeyX, accessKeyY].WaypointObject.transform.position, Quaternion.identity);
                     localGridSystem.localGrid[accessKeyX, accessKeyY].Traversable = false;
